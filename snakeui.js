@@ -24,7 +24,6 @@
       }
     });
 
-
     this.timer = setInterval(function() {
       self.step(board);
     }, 500)
@@ -38,7 +37,6 @@
       board.addApple();
     }
     if (board.checkCollision()) {
-      console.log(board.snake.segments);
       alert("You lose!");
       clearInterval(this.timer);
       this.timer = null;

@@ -32,9 +32,11 @@
   }
 
   Board.prototype.render = function(el) {
-    el.html("");
+    var renderAll = $("#board div").length == 0;
     for ( var y = 0; y < Snake.BOARD_HEIGHT; y++) {
-      el.append("<div id=\"y" + y + "\" class=\"row\"></div>");
+      if (renderAll) {
+        el.append("<div id=\"y" + y + "\" class=\"row\"></div>");
+      }
       for ( var x = 0; x < Snake.BOARD_WIDTH; x++) {
         var segment = _.find(this.snake.segments, function(coord) {
           return coord.x == x && coord.y == y;
@@ -42,8 +44,12 @@
         var apple = _.find(this.apples, function(coord) {
           return coord.x == x && coord.y == y;
         });
-        $('#y' + y).append('<div class=\"square\"></div>');
-        var cur = $("#y" + y + " div").last();
+        if (renderAll) {
+          $('#y' + y).append('<div class=\"square\" id=\"x' + x + '\"></div>');
+        }
+        var cur = $("#y" + y + " #x" + x);
+        cur.removeClass("snake");
+        cur.removeClass("apple");
         if (segment) {
           cur.addClass("snake");
         } else if (apple) {
@@ -68,7 +74,6 @@
       var coord = new Coord(-1, -1);
       coord.follow(_.last(this.snake.segments));
       this.snake.segments.push(coord);
-      console.log(this.snake.segments);
     }
   }
 
