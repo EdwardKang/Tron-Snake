@@ -4,7 +4,7 @@
   var View = Game.View = function View(el) {
     this.el = el;
     this.timer = null;
-    this.points = 0;
+    this.points = [0, 0];
     this.paused = false;
   }
 
@@ -12,27 +12,38 @@
     var self = this;
 
     var snake = new Game.Snake();
-    var board = new Game.Board(snake);
+    var tron = new Game.Snake();
+    var board = new Game.Board(snake, tron);
     $(document).keydown(function(event) {
       var key = event.keyCode;
-      if (key === 40) {
-        snake.turn('S');
-      } else if (key === 38) {
-        snake.turn('N');
-      } else if (key === 39) {
-        snake.turn('E');
-      } else if (key === 37) {
-        snake.turn('W');
+      var moving = snake;
+
+      if (key > 40) {
+        moving = tron;
+      }
+
+      if (key === 40 || key === 83) {
+        moving.turn('S');
+      } else if (key === 38 || key === 87) {
+        moving.turn('N');
+      } else if (key === 39 || key === 68) {
+        moving.turn('E');
+      } else if (key === 37 || key === 65) {
+        moving.turn('W');
       }
     });
 
     $("#pause").on("click", function() {
       if (self.paused) {
-        self.restart(board);
+        self.unpause(board);
       } else {
         self.pause(board);
       }
-      $("#pause").html(self.paused ? "Restart" : "Pause");
+      $("#pause").html(self.paused ? "Unpause" : "Pause");
+    });
+
+    $("#restart").on("click", function() {
+      self.restart();
     });
 
     this.timer = setInterval(function() {
@@ -44,9 +55,15 @@
   View.prototype.step = function(board) {
     this.board = board;
     board.checkApple();
-    board.snake.move();
-    this.points = (board.snake.segments.length - 1) * 10;
-    $("#points").html(this.points);
+    board.snakes.forEach(function(snake) {
+      snake.move();
+    });
+    this.points = board.snakes.map(function(s) {
+      return (s.segments.length - 1) * 10;
+    });
+    this.points.forEach(function(pts, i) {
+      $("#points_" + i).html(pts);
+    });
     if (Math.random() < 0.05) {
       board.addApple();
     }
@@ -59,13 +76,19 @@
     }
   };
 
+  View.prototype.restart = function() {
+    this.pause();
+    this.paused = false;
+    this.start();
+  }
+
   View.prototype.pause = function(board) {
     clearInterval(this.timer);
     this.timer = null;
     this.paused = true;
   }
 
-  View.prototype.restart = function(board) {
+  View.prototype.unpause = function(board) {
     var self = this;
     this.timer = setInterval(function() {
       self.step(board);

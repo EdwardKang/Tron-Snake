@@ -5,7 +5,10 @@
     Snake.BOARD_WIDTH = 30;
     Snake.BOARD_HEIGHT = 30;
     this.dir = 'N';
-    this.segments = [new Coord(Snake.BOARD_WIDTH / 2, Snake.BOARD_HEIGHT / 2)];
+    this.segments = [
+    new Coord(Math.floor(Math.random() * Snake.BOARD_WIDTH),
+      Math.floor(Math.random() * Snake.BOARD_HEIGHT)
+    )];
   }
 
   Game.Snake.DIRECTION = {
@@ -26,8 +29,8 @@
     this.dir = dir;
   };
 
-  var Board = Game.Board = function Board(snake) {
-    this.snake = snake;
+  var Board = Game.Board = function Board(snake, tron) {
+    this.snakes = [snake, tron];
     this.apples = [];
   }
 
@@ -38,7 +41,10 @@
         el.append("<div id=\"y" + y + "\" class=\"row\"></div>");
       }
       for ( var x = 0; x < Snake.BOARD_WIDTH; x++) {
-        var segment = _.find(this.snake.segments, function(coord) {
+        var snake = _.find(this.snakes[0].segments, function(coord) {
+          return coord.x == x && coord.y == y;
+        });
+        var tron = _.find(this.snakes[1].segments, function(coord) {
           return coord.x == x && coord.y == y;
         });
         var apple = _.find(this.apples, function(coord) {
@@ -49,9 +55,12 @@
         }
         var cur = $("#y" + y + " #x" + x);
         cur.removeClass("snake");
+        cur.removeClass("tron");
         cur.removeClass("apple");
-        if (segment) {
+        if (snake) {
           cur.addClass("snake");
+        } else if (tron) {
+          cur.addClass("tron");
         } else if (apple) {
           cur.addClass("apple");
         }
@@ -65,32 +74,42 @@
   }
 
   Board.prototype.checkApple = function () {
-    var head = this.snake.segments[0];
-    var apple = _.find(this.apples, function(apple) {
-      return apple.x == head.x && apple.y == head.y;
+    var self = this;
+    this.snakes.forEach(function(snake) {
+      var head = snake.segments[0];
+      var apple = _.find(self.apples, function(apple) {
+        return apple.x == head.x && apple.y == head.y;
+      });
+      if (apple) {
+        self.apples.splice(self.apples.indexOf(apple), 1);
+        var coord = new Coord(-1, -1);
+        coord.follow(_.last(snake.segments));
+        snake.segments.push(coord);
+      }
     });
-    if (apple) {
-      this.apples.splice(this.apples.indexOf(apple), 1);
-      var coord = new Coord(-1, -1);
-      coord.follow(_.last(this.snake.segments));
-      this.snake.segments.push(coord);
-    }
   }
 
   Board.prototype.checkCollision = function () {
-    var head = this.snake.segments[0];
-    segs = this.snake.segments.slice(1);
+    var hitSelf, offBoard, hitOther;
+    var self = this;
+    this.snakes.forEach(function(snake, idx) {
+      var head = snake.segments[0];
+      segs = snake.segments.slice(1);
 
-    var hitSelf = _.find(segs, function(coord) {
-      return coord.x == head.x && coord.y == head.y;
+      hitSelf = hitSelf || _.find(segs, function(coord) {
+        return coord.x == head.x && coord.y == head.y;
+      });
+
+      hitOther = hitOther || _.find(self.snakes[idx == 0 ? 1 : 0].segments, function(coord) {
+        return coord.x == head.x && coord.y == head.y;
+      });
+
+      offBoard = offBoard || head.x < 0 ||
+        head.x > Game.Snake.BOARD_WIDTH ||
+        head.y < 0 ||
+        head.y > Game.Snake.BOARD_HEIGHT;
     });
-
-    var offBoard = head.x < 0 ||
-      head.x > Game.Snake.BOARD_WIDTH ||
-      head.y < 0 ||
-      head.y > Game.Snake.BOARD_HEIGHT;
-
-    return hitSelf || offBoard;
+    return hitSelf || offBoard || hitOther;
   }
 
   function Coord(x, y) {
