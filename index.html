@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Snake</title>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js"></script>
+    <script type="text/javascript" src="snake.js"></script>
+    <script type="text/javascript" src="snakeui.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  <body>
+    <div id="board"></div>
+    <script type="text/javascript" charset="utf-8">
+      var view = new this.Game.View($('#board'));
+      view.start();
+    </script>
+  </body>
+</html>

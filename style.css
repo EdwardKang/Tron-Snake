@@ -1,0 +1,16 @@
+.square {
+  display: inline-block;
+  border: 1px white solid;
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+}
+
+
+.snake {
+  background-color: #0F0;
+}
+
+.apple {
+  background-color: #F00;
+}
