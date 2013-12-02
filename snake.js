@@ -2,8 +2,8 @@
   var Game = root.Game = (root.Game || {});
 
   var Snake = Game.Snake = function Snake() {
-    Snake.BOARD_WIDTH = 50;
-    Snake.BOARD_HEIGHT = 50;
+    Snake.BOARD_WIDTH = 30;
+    Snake.BOARD_HEIGHT = 30;
     this.dir = 'N';
     this.segments = [new Coord(Snake.BOARD_WIDTH / 2, Snake.BOARD_HEIGHT / 2)];
   }

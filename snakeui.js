@@ -4,6 +4,8 @@
   var View = Game.View = function View(el) {
     this.el = el;
     this.timer = null;
+    this.points = 0;
+    this.paused = false;
   }
 
   View.prototype.start = function () {
@@ -24,15 +26,27 @@
       }
     });
 
+    $("#pause").on("click", function() {
+      if (self.paused) {
+        self.restart(board);
+      } else {
+        self.pause(board);
+      }
+      $("#pause").html(self.paused ? "Restart" : "Pause");
+    });
+
     this.timer = setInterval(function() {
       self.step(board);
-    }, 500)
+    }, 100)
     board.addApple();
   }
 
   View.prototype.step = function(board) {
+    this.board = board;
     board.checkApple();
     board.snake.move();
+    this.points = (board.snake.segments.length - 1) * 10;
+    $("#points").html(this.points);
     if (Math.random() < 0.05) {
       board.addApple();
     }
@@ -44,5 +58,19 @@
       board.render(this.el);
     }
   };
+
+  View.prototype.pause = function(board) {
+    clearInterval(this.timer);
+    this.timer = null;
+    this.paused = true;
+  }
+
+  View.prototype.restart = function(board) {
+    var self = this;
+    this.timer = setInterval(function() {
+      self.step(board);
+    }, 100)
+    this.paused = false;
+  }
 
 })(this);
