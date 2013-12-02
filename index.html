@@ -13,9 +13,17 @@
     <button id="pause">Pause</button>
     <button id="restart">Restart</button>
     <div id="board"></div>
+    <table id="leaderboard" border="1px">
+    </table>
     <script type="text/javascript" charset="utf-8">
       var view = new this.Game.View($('#board'));
       view.start();
+      var self = this;
+      $("#restart").on("click", function() {
+        clearInterval(view.timer);
+        view = new self.Game.View($('#board'));
+        view.start();
+      });
     </script>
   </body>
 </html>

@@ -6,11 +6,12 @@
     this.timer = null;
     this.points = [0, 0];
     this.paused = false;
+    this.topScores = [50, 40, 30, 20, 10];
   }
 
   View.prototype.start = function () {
     var self = this;
-
+    this.updateLeaderBoard();
     var snake = new Game.Snake();
     var tron = new Game.Snake();
     var board = new Game.Board(snake, tron);
@@ -42,10 +43,6 @@
       $("#pause").html(self.paused ? "Unpause" : "Pause");
     });
 
-    $("#restart").on("click", function() {
-      self.restart();
-    });
-
     this.timer = setInterval(function() {
       self.step(board);
     }, 100)
@@ -69,6 +66,8 @@
     }
     if (board.checkCollision()) {
       alert("You lose!");
+      this.updateScores();
+      this.updateLeaderBoard();
       clearInterval(this.timer);
       this.timer = null;
     } else {
@@ -76,24 +75,31 @@
     }
   };
 
-  View.prototype.restart = function() {
-    this.pause();
-    this.paused = false;
-    this.start();
-  }
-
   View.prototype.pause = function(board) {
     clearInterval(this.timer);
-    this.timer = null;
     this.paused = true;
   }
 
   View.prototype.unpause = function(board) {
     var self = this;
+    clearInterval(view.timer);
     this.timer = setInterval(function() {
       self.step(board);
     }, 100)
     this.paused = false;
+  }
+
+  View.prototype.updateLeaderBoard = function() {
+    $("#leaderboard").html('<tr><th>LeaderBoard: Scores</th></tr>');
+    this.topScores.forEach(function(score) {
+      $('#leaderboard').append("<tr><td>" + score + "</td></tr>");
+    });
+  }
+
+  View.prototype.updateScores = function() {
+    this.topScores.push(this.points[0]);
+    this.topScores.push(this.points[1]);
+    this.topScores = this.topScores.sort().reverse().slice(0, 5);
   }
 
 })(this);
