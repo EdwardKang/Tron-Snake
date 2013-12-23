@@ -45,7 +45,7 @@
 
     this.timer = setInterval(function() {
       self.step(board);
-    }, 100)
+    }, 500)
     board.addApple();
   }
 
@@ -85,7 +85,7 @@
     clearInterval(view.timer);
     this.timer = setInterval(function() {
       self.step(board);
-    }, 100)
+    }, 500)
     this.paused = false;
   }
 
