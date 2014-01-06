@@ -7,7 +7,7 @@
     this.dir = 'N';
     this.segments = [
     new Coord(Math.floor(Math.random() * Snake.BOARD_WIDTH),
-      Math.floor(Math.random() * Snake.BOARD_HEIGHT)
+      Math.floor(Math.random() * Snake.BOARD_HEIGHT / 2 + 15 )
     )];
   }
 
