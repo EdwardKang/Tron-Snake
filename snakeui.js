@@ -15,7 +15,7 @@
     var snake = new Game.Snake();
     var tron = new Game.Snake();
     var board = new Game.Board(snake, tron);
-    $(document).keydown(function(event) {
+    $(document).keydown(function(event) {			
       var key = event.keyCode;
       var moving = snake;
 
@@ -23,13 +23,13 @@
         moving = tron;
       }
 
-      if (key === 40 || key === 83) {
+      if ((key === 40 || key === 83) && moving.dir !== "N") {
         moving.turn('S');
-      } else if (key === 38 || key === 87) {
+      } else if ((key === 38 || key === 87) && moving.dir !== "S") {
         moving.turn('N');
-      } else if (key === 39 || key === 68) {
+      } else if ((key === 39 || key === 68) && moving.dir !== "W") {
         moving.turn('E');
-      } else if (key === 37 || key === 65) {
+      } else if ((key === 37 || key === 65) && moving.dir !== "E") {
         moving.turn('W');
       }
     });
@@ -90,7 +90,7 @@
   }
 
   View.prototype.updateLeaderBoard = function() {
-    $("#leaderboard").html('<tr><th>LeaderBoard: Scores</th></tr>');
+    $("#leaderboard").html('<tr><th class="table-header">LeaderBoard: Scores</th></tr>');
     this.topScores.forEach(function(score) {
       $('#leaderboard').append("<tr><td>" + score + "</td></tr>");
     });

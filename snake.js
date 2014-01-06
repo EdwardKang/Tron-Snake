@@ -105,9 +105,9 @@
       });
 
       offBoard = offBoard || head.x < 0 ||
-        head.x > Game.Snake.BOARD_WIDTH ||
+        head.x >= Game.Snake.BOARD_WIDTH ||
         head.y < 0 ||
-        head.y > Game.Snake.BOARD_HEIGHT;
+        head.y >= Game.Snake.BOARD_HEIGHT;
     });
     return hitSelf || offBoard || hitOther;
   }

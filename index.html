@@ -7,14 +7,25 @@
     <script type="text/javascript" src="snakeui.js"></script>
     <link rel="stylesheet" href="style.css" type="text/css">
   </head>
+	
   <body>
-    <h3>Snake Points: <span id="points_0">0</span></h3>
-    <h3>Tron Points: <span id="points_1">0</span></h3>
-    <button id="pause">Pause</button>
-    <button id="restart">Restart</button>
-    <div id="board"></div>
-    <table id="leaderboard" border="1px">
-    </table>
+    <h3 class="points-wrapper">
+			<div class="snake-points">
+				Snake Points: <span id="points_0">0</span> 
+			</div>
+			
+			<div class="tron-points">
+				Tron Points: <span id="points_1">0</span>
+			</div>
+		</h3>
+		
+		<div class="board-wrapper">
+	    <div id="board"></div>
+	    <button id="pause">Pause</button>
+	    <button id="restart">Restart</button>
+	    <table id="leaderboard" border="1px"></table>
+		</div>
+			
     <script type="text/javascript" charset="utf-8">
       var view = new this.Game.View($('#board'));
       view.start();
