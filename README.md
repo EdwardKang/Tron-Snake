@@ -5,6 +5,7 @@ Controls
 ----------
 
 Player Snake = left right up down keys
+
 Player Tron = w a s d 
 
 Description
